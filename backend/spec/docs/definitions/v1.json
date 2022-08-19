@@ -1,0 +1,45 @@
+{
+  "v1": {
+    "snippet_content":    {
+      "type":        "string",
+      "description": "Snippeet Content"
+    },
+    "snippet_language":   {
+      "type":        "string",
+      "description": "Name of language or filetype for vim"
+    },
+    "snippet_name":       {
+      "type":        "string",
+      "description": "Name of snippet"
+    },
+    "snippet_public":     {
+      "type":        "boolean",
+      "description": "Publicly available or restricted to the current user"
+    },
+    "snippet": {
+      "type":       "object",
+      "required":   [
+        "content",
+        "created_at",
+        "language",
+        "name",
+        "public",
+        "updated_at"
+      ],
+      "properties": {
+        "content":    { "$ref": "#/components/schemas/snippet_content" },
+        "created_at": {
+          "type":   "string",
+          "format": "date-time"
+        },
+        "language":   { "$ref": "#/components/schemas/snippet_language" },
+        "name":       { "$ref": "#/components/schemas/snippet_name" },
+        "public":     { "$ref": "#/components/schemas/snippet_public" },
+        "updated_at": {
+          "type":   "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

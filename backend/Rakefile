@@ -1,0 +1,20 @@
+Rake.add_rakelib "lib/tasks"
+
+namespace :db do
+  desc "Run migrations"
+  task :migrate, [:version] do |t, args|
+    require "sequel/core"
+    require "dotenv"
+
+    Dotenv.load(".env") if File.exist?(".env")
+    Sequel.extension :migration
+
+    version = args[:version].to_i if args[:version]
+    uri     = URI.parse(ENV.fetch("DATABASE_URL"))
+
+    Sequel.connect(uri.to_s, user: ENV["DB_USER"], password: ENV["DB_PASSWORD"]) do |db|
+      db.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
+      Sequel::Migrator.run(db, "db/migrations", target: version)
+    end
+  end
+end

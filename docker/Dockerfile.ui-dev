@@ -1,0 +1,10 @@
+FROM node:18.7-alpine
+
+WORKDIR /usr/src/app
+
+COPY frontend/package.json /usr/src/app/package.json
+COPY frontend/yarn.lock /usr/src/app/yarn.lock
+
+RUN yarn install
+
+EXPOSE 3000

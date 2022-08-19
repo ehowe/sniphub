@@ -1,0 +1,83 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  DisplayCopNames: true
+  DisabledByDefault: true
+  Exclude:
+    - "public/**/*"
+
+Layout/EmptyLines:
+  Enabled: true
+
+Layout/ExtraSpacing:
+  Enabled: true
+  ForceEqualSignAlignment: true
+
+Layout/HashAlignment:
+  Enabled: true
+  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: table
+  EnforcedLastArgumentHashStyle: ignore_implicit
+
+Layout/TrailingEmptyLines:
+  Enabled: true
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
+Rake/ClassDefinitionInTask:
+  Enabled: true
+
+Rake/Desc:
+  Enabled: true
+
+Rake/DuplicateNamespace:
+  Enabled: true
+
+Rake/DuplicateTask:
+  Enabled: true
+
+Rake/MethodDefinitionInTask:
+  Enabled: true
+
+RSpec/AlignLeftLetBrace:
+  Enabled: true
+
+RSpec/DescribedClass:
+  EnforcedStyle: described_class
+
+RSpec/EmptyLineAfterFinalLet:
+  Enabled: true
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/Documentation:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashSyntax:
+  Enabled: true
+  EnforcedStyle: ruby19
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: false
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/SignalException:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes

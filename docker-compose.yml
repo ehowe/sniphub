@@ -1,0 +1,50 @@
+---
+version: "3.8"
+
+services:
+  db:
+    build:
+      network: host
+      context: .
+      dockerfile: docker/Dockerfile.db
+    environment:
+      POSTGRES_DB: sniphub
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sniphub
+    hostname:
+      postgres
+    ports:
+      - "55432:5432"
+    volumes:
+      - /var/lib/pgsql
+
+  api:
+    depends_on: [db]
+    build:
+      network: host
+      context: .
+      dockerfile: docker/Dockerfile.app
+    command: /entrypoint.sh
+    hostname: api
+    ports:
+      - "4000:4000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_PASSWORD: sniphub
+      DB_USER: postgres
+    volumes:
+      - ./backend:/usr/src/app
+
+  ui:
+    depends_on: [api, db]
+    build:
+      network: host
+      context: .
+      dockerfile: docker/Dockerfile.ui
+    hostname: ui
+    ports:
+      - "3000:80"
+    volumes:
+      - /usr/src/app/node_modules
+      - ./frontend:/usr/src/app
