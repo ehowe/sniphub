@@ -7,7 +7,7 @@ require "jwt"
 require "roda"
 
 class Sniphub < Roda
-  SECRET_KEY = ENV.fetch("APPLICATION_SECRET")
+  SECRET_KEY       = ENV.fetch("APPLICATION_SECRET")
   TOKEN_EXPIRATION = ENV.fetch("TOKEN_EXPIRATION", 60 * 60 * 24)
 
   def self.root
