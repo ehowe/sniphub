@@ -1,0 +1,30 @@
+module.exports = {
+  env: {
+    browser: true,
+    es6: true,
+  },
+  extends: ['react-app', 'standard', 'prettier'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', '@babel'],
+  parserOptions: {
+    ecmaFeatures: { jsx: true },
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  rules: {
+    'array-element-newline': 'off',
+    camelcase: 'off',
+    'default-case': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
+    'no-unused-vars': 'off',
+    'no-use-before-define': 'off',
+    'object-property-newline': 'off',
+    'quote-props': 'off',
+    quotes: ['error', 'single', { avoidEscape: true }],
+    'react-hooks/exhaustive-deps': 0,
+    '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
+    '@typescript-eslint/no-use-before-define': ['off'],
+  },
+  settings: { react: { version: 'detect' } },
+}
