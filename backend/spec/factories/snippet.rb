@@ -7,6 +7,7 @@ FactoryBot.define do
     sequence(:name)    { |n| "Snippet #{n}" }
     sequence(:content) { |n| "Content #{n}" }
     language           { "ruby" }
+    user
 
     after(:create) do |snippet, evaluator|
       evaluator.tag_names.each do |tag_name|

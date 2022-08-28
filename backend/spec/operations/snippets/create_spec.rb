@@ -4,11 +4,12 @@ require_relative "../../../lib/operations/snippets/create"
 
 describe Sniphub::Operations::Snippets::Create do
   let(:params) { {} }
+  let(:user)   { create(:user) }
 
   shared_examples_for "creating a snippet" do
     it "creates a snippet" do
       expect do
-        operation = described_class.(params)
+        operation = described_class.(params: params, user: user)
 
         expect(operation).to be_success
 

@@ -3,14 +3,16 @@ require "swagger_helper"
 describe "Snippets API", type: :doc, swagger_doc: "v1.json" do
   path "/snippets" do
     get "Lists snippets" do
+      let(:user) { create(:user) }
+
       before(:each) do
-        create(:snippet)
-        create(:snippet)
-        create(:snippet)
+        create(:snippet, user: user)
+        create(:snippet, user: user)
+        create(:snippet, user: user, public: false)
       end
 
       tags "Snippets"
-      security []
+      security [ apiKey: [] ]
       produces "application/json"
       consumes "application/json"
 
@@ -26,13 +28,31 @@ describe "Snippets API", type: :doc, swagger_doc: "v1.json" do
             },
           }
 
-        validate_schema!
+        context "unauthenticated" do
+          it "Lists public snippets" do |example|
+            submit_request(example.metadata)
+
+            expect(@body[:snippets].count).to eq(2)
+          end
+        end
+
+        context "authenticated" do
+          include_context "jwt helper"
+
+          it "Lists public and private snippets" do |example|
+            submit_request(example.metadata)
+
+            expect(@body[:snippets].count).to eq(3)
+          end
+        end
       end
     end
 
     post "Creates a snippet" do
+      include_context "jwt helper"
+
       tags "Snippets"
-      security []
+      security [ apiKey: [] ]
       produces "application/json"
       consumes "application/json"
 

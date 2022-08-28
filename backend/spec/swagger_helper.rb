@@ -25,6 +25,13 @@ RSpec.configure do |c|
         components: {
           schemas:         DEFINITIONS[doc.fetch(:info).fetch(:version)].merge(common_defs).symbolize_keys,
           securitySchemes: {
+            apiKey: {
+              in:       :header,
+              name:     "authorization",
+              required: false,
+              type:     :apiKey,
+            }
+
           }
         }
       }.merge(doc)

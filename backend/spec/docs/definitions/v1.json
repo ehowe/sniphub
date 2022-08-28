@@ -1,8 +1,21 @@
 {
   "v1": {
+    "user": {
+      "type": "object",
+      "required": ["id", "first_name", "last_name", "created_at", "updated_at", "username", "external_provider"],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "first_name": { "type": "string" },
+        "last_name": { "type": "string" },
+        "external_provider": { "type": "string", "nullable": true, "enum": ["github", null] },
+        "username": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    },
     "snippet_content":    {
       "type":        "string",
-      "description": "Snippeet Content"
+      "description": "Snippet Content"
     },
     "snippet_language":   {
       "type":        "string",
