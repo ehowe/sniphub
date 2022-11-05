@@ -1,5 +1,12 @@
 {
   "v1": {
+    "user_response": {
+      "type": "object",
+      "required": ["user"],
+      "properties": {
+        "user": { "$ref": "#/components/schemas/user" }
+      }
+    },
     "user": {
       "type": "object",
       "required": ["id", "first_name", "last_name", "created_at", "updated_at", "username", "external_provider"],

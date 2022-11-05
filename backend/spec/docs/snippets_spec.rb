@@ -6,9 +6,9 @@ describe "Snippets API", type: :doc, swagger_doc: "v1.json" do
       let(:user) { create(:user) }
 
       before(:each) do
-        create(:snippet, user: user)
-        create(:snippet, user: user)
-        create(:snippet, user: user, public: false)
+        create(:snippet, user:)
+        create(:snippet, user:)
+        create(:snippet, user:, public: false)
       end
 
       tags "Snippets"
@@ -93,13 +93,17 @@ describe "Snippets API", type: :doc, swagger_doc: "v1.json" do
   end
 
   context "with a snippet" do
-    let(:snippet) { create(:snippet) }
+    let(:user)    { create(:user) }
+    let(:snippet) { create(:snippet, user:) }
     let(:id)      { snippet.id }
+
+    include_context "jwt helper"
 
     path "/snippets/{id}" do
       put "Updates a snippet" do
+
         tags "Snippets"
-        security []
+        security [ apiKey: [] ]
         produces "application/json"
         consumes "application/json"
 
@@ -118,6 +122,26 @@ describe "Snippets API", type: :doc, swagger_doc: "v1.json" do
             }
           }
         )
+
+        response "403", "Unauthorized" do
+          let(:authorization) { nil }
+          let(:body) do
+            {
+              content:  "Updated content",
+              language: "newlang",
+              name:     "My first snippet update",
+              public:   false,
+            }
+          end
+
+          schema type: :object,
+            required: [:message],
+            properties: {
+              message: { type: :string }
+            }
+
+          validate_schema!
+        end
 
         response "200", "Snippet updated" do
           let(:body) do
@@ -149,11 +173,17 @@ describe "Snippets API", type: :doc, swagger_doc: "v1.json" do
 
     path "/snippets/{id}/tags" do
       post "Add a tag to a snippet" do
-        let(:snippet) { create(:snippet) }
+        let(:user)    { create(:user) }
+        let(:snippet) { create(:snippet, user:) }
         let(:id)      { snippet.id }
+        let(:tag)     { create(:tag) }
+
+        let(:body) do
+          { tag_ids: [ tag.id ] }
+        end
 
         tags "Snippets"
-        security []
+        security [ apiKey: [] ]
         produces "application/json"
         consumes "application/json"
 
@@ -173,18 +203,24 @@ describe "Snippets API", type: :doc, swagger_doc: "v1.json" do
           }
         )
 
-        response "200", "Tag added" do
-          let(:tag) { create(:tag) }
+        response "403", "Unauthorized" do
+          let(:authorization) { nil }
 
+          schema type: :object,
+            required: [:message],
+            properties: {
+              message: { type: :string }
+            }
+
+          validate_schema!
+        end
+
+        response "200", "Tag added" do
           schema type: :object,
             required: [:snippet],
             properties: {
               snippet: { "$ref" => "#/components/schemas/snippet" },
             }
-
-          let(:body) do
-            { tag_ids: [ tag.id ] }
-          end
 
           validate_schema!
         end

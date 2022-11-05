@@ -4,7 +4,8 @@ class Sniphub
   module Operations
     module Auth
       PROVIDERS = {
-        "github" => Github
+        "github" => Github,
+        "local"  => Local,
       }
     end
   end

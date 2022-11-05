@@ -2,7 +2,7 @@ class Sniphub
   route do |r|
     r.on "api" do
       r.options do
-        response["Access-Control-Allow-Methods"]  = "POST"
+        response["Access-Control-Allow-Methods"]  = "POST,PUT"
         response["Access-Control-Allow-Headers"]  = "Content-Type, Authorization"
 
         {}
@@ -13,10 +13,10 @@ class Sniphub
           operation = Sniphub::Operations::Auth::PROVIDERS[params["provider"]].(params)
 
           unless operation.success?
-            r.halt(400, operation.result)
+            r.halt(403, operation.result)
           end
 
-          response["Authorization"] = JWT.encode(operation.result, SECRET_KEY, "HS256")
+          response["Authorization"] = JWT.encode(operation.result.values, SECRET_KEY, "HS256")
 
           { user: Sniphub::UserPresenter.display(operation.result) }
         end
@@ -27,6 +27,28 @@ class Sniphub
           with_valid_jwt! do
             { user: Sniphub::UserPresenter.display(current_user) }
           end
+        end
+
+        r.post "register" do
+          operation = Sniphub::Operations::Users::Register.(params)
+
+          unless operation.success?
+            r.halt(422, operation.result)
+          end
+
+          { user: Sniphub::UserPresenter.display(operation.result) }
+        end
+
+        r.get "confirm" do
+          operation = Sniphub::Operations::Users::Confirm.(params)
+
+          unless operation.success?
+            r.halt(422, operation.result)
+          end
+
+          response["Authorization"] = JWT.encode(operation.result.values, SECRET_KEY, "HS256")
+
+          { user: Sniphub::UserPresenter.display(current_user) }
         end
       end
 
@@ -44,7 +66,7 @@ class Sniphub
         r.is do
           r.post do
             with_valid_jwt! do
-              operation = Sniphub::Operations::Snippets::Create.(params: params, user: current_user)
+              operation = Sniphub::Operations::Snippets::Create.(params:, user: current_user)
 
               unless operation.success?
                 r.halt(422, operation.result)
@@ -56,29 +78,31 @@ class Sniphub
         end
 
         r.on String do |snippet_id|
-          snippet = Snippet.eager(:tags).with_pk(snippet_id)
+          with_valid_jwt! do
+            snippet = Snippet.eager(:tags).where(user_id: current_user.id).with_pk(snippet_id)
 
-          r.halt(404) unless snippet
+            r.halt(404) unless snippet
 
-          r.put do
-            operation = Sniphub::Operations::Snippets::Update.(snippet, params)
-
-            unless operation.success?
-              return operation.result
-            end
-
-            { snippet: SnippetPresenter.display(operation.result) }
-          end
-
-          r.is "tags" do
-            r.post do
-              operation = Sniphub::Operations::Snippets::Tag.(snippet, params)
+            r.put do
+              operation = Sniphub::Operations::Snippets::Update.(snippet, params)
 
               unless operation.success?
-                r.halt(422, operation.result)
+                return operation.result
               end
 
               { snippet: SnippetPresenter.display(operation.result) }
+            end
+
+            r.is "tags" do
+              r.post do
+                operation = Sniphub::Operations::Snippets::Tag.(snippet, params)
+
+                unless operation.success?
+                  r.halt(422, operation.result)
+                end
+
+                { snippet: SnippetPresenter.display(operation.result) }
+              end
             end
           end
         end

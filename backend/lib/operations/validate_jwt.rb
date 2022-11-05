@@ -11,7 +11,7 @@ class Sniphub
         return Sniphub::Operations::Result.new(:error, "No authorization header") unless authorization_header
 
         begin
-          decoded_token = JWT.decode(authorization_header, Sniphub::SECRET_KEY, "HS256")&.first
+          decoded_token = JWT.decode(authorization_header.split(" ").last, Sniphub::SECRET_KEY, "HS256")&.first
 
           u = Sniphub::User.with_pk(decoded_token["id"])
 

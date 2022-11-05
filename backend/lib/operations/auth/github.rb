@@ -17,8 +17,6 @@ class Sniphub
             "redirect_uri"  => ENV["OAUTH2_REDIRECT_URI"],
           }
 
-          p request_params
-
           response = Faraday.post("https://github.com/login/oauth/access_token", Oj.dump(request_params), { "Content-Type" => "application/json", "Accept" => "application/json" })
 
           return Result.new(:error, "Invalid access token response") unless response.status == 200

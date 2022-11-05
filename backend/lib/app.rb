@@ -3,7 +3,9 @@ require "bundler/setup"
 
 Dotenv.load(".env") if File.exist?(".env")
 
+require "awesome_print"
 require "jwt"
+require "logger"
 require "roda"
 
 class Sniphub < Roda
@@ -13,6 +15,8 @@ class Sniphub < Roda
   def self.root
     File.expand_path("./")
   end
+
+  Logger = Logger.new("#{root}/log/#{ENV.fetch("RACK_ENV")}.log")
 
   require_relative "./db"
 

@@ -11,5 +11,9 @@ class Sniphub
     def validate
       super unless external_provider
     end
+
+    def confirmed?
+      !confirmation_token
+    end
   end
 end

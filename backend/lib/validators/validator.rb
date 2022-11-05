@@ -54,7 +54,7 @@ class Sniphub
 
       def validate_required_attributes
         self.class.required.each do |attr|
-          errors.push({ key => "is required" }) if self.send(attr.to_sym).nil?
+          errors.push({ attr.to_s => "is required" }) if self.send(attr.to_sym).nil? || self.send(attr.to_sym)&.empty?
         end
       end
 
