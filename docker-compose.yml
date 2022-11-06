@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: sniphub
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: sniphub
+    container_name: sniphub_db
     hostname:
       postgres
     ports:
@@ -25,6 +26,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile.app
     command: /entrypoint.sh
+    container_name: sniphub_api
     hostname: api
     ports:
       - "4000:4000"
@@ -42,6 +44,7 @@ services:
       network: host
       context: .
       dockerfile: docker/Dockerfile.ui
+    container_name: sniphub_ui
     hostname: ui
     ports:
       - "3000:80"
